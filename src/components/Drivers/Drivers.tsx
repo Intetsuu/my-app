@@ -1,38 +1,33 @@
 import React, { useEffect, useState } from "react";
-
 import styles from "./Drivers.module.scss";
-import axios from "axios";
+import { fetchDrivers } from "../../api/driversApi";
 import { IDriver } from "../../@types/drivers.types";
+import { useNavigate } from "react-router";
 
 const Drivers = () => {
   const [drivers, setDrivers] = useState<IDriver[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const fetchDrivers = async () => {
+    const getDrivers = async () => {
       try {
-        const response = await axios.get<IDriver[]>(
-          "https://api.openf1.org/v1/drivers",
-          {
-            params: {
-              session_key: "latest",
-            },
-          },
-        );
-
-        console.log("OpenF1 Latest Drivers:", response.data);
-
-        setDrivers(response.data);
-      } catch (error) {
-        console.error("Error fetching drivers:", error);
+        const data = await fetchDrivers();
+        setDrivers(data);
+      } catch (err) {
+        setError("Failed to load drivers");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDrivers();
+    getDrivers();
   }, []);
+
   if (loading) return <div className={styles.loading}>Loading drivers...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className={styles.container}>
@@ -43,6 +38,7 @@ const Drivers = () => {
           <div
             key={driver.driver_number}
             className={styles.card}
+            onClick={() => navigate(`/drivers/${driver.driver_number}`)}
             style={{
               borderColor: driver.team_colour
                 ? `#${driver.team_colour}`
