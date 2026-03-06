@@ -10,6 +10,14 @@
     font-size: 12px;
     color: #000000;
 
+    .logo img {
+      cursor: pointer; // уже есть ✅
+      transition: transform 0.2s; // добавим лёгкую анимацию при hover
+      &:hover {
+        transform: scale(1.05); // чуть увеличиваем при наведении
+      }
+    }
+
     .nav {
       display: flex;
       align-items: center;
@@ -31,7 +39,7 @@
     .logoMain {
       font-size: 24px;
       font-weight: bold;
-      // красный F1
+      cursor: pointer;
     }
 
     .menu {

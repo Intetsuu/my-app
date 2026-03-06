@@ -14,6 +14,7 @@ const Header = () => {
         <div className={styles.logo}>
           <nav className={styles.nav}>
             <img className={styles.logo} src={FIA} alt="FIA Logo"></img>
+
             <a href="#">F1</a>
             <a href="#">F2</a>
             <a href="#">F3</a>
@@ -21,14 +22,16 @@ const Header = () => {
         </div>
       </div>
       <div className={styles.mainbar}>
-        <img className={styles.logoMain} src={F1} alt="F1"></img>
+        <Link to="/">
+          <img className={styles.logoMain} src={F1} alt="F1"></img>{" "}
+        </Link>
         <nav className={styles.menu}>
           <Link to="/">Home</Link>
           <Link to="/Drivers">Drivers</Link>
           <Link to="/Schedule">Schedule</Link>
           <Link to="/standings">Standings</Link>
           <Link to="/teams">Teams</Link>
-          <Link to="/live">Live Timing</Link>
+          <Link to="/liveTiming">Live Timing</Link>
         </nav>
         <div className={styles.buttons}>
           <button className={styles.signIn}>

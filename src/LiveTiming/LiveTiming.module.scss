@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  color: #fff;
+}
+
+.timingTable {
+  flex: 1;
+  max-width: 300px;
+  background-color: #111;
+  border-radius: 8px;
+  padding: 10px;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 6px;
+      text-align: left;
+      border-bottom: 1px solid #444;
+    }
+
+    th {
+      background-color: #222;
+    }
+  }
+}
+
+.trackMap {
+  flex: 2;
+  background-color: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    border: 1px solid #555;
+  }
+}
