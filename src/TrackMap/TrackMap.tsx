@@ -8,15 +8,17 @@ interface ICar {
   y: number;
 }
 
-const driverNumbers = [44, 16, 1, 81]; // номера пилотов
-const API_UPDATE_INTERVAL = 5000; // запрос к API раз в 5 секунд
-const ANIMATION_FRAMES = 60; // плавная анимация ~1 секунда
+// Номера пилотов
+const driverNumbers = [44, 16, 1, 81];
+// Настройки обновления
+const API_UPDATE_INTERVAL = 1000; // обновляем позиции каждую секунду
+const ANIMATION_FRAMES = 30; // плавная анимация ~1 секунда
 
 const TrackMap = () => {
   const [cars, setCars] = useState<ICar[]>([]);
   const carsRef = useRef<ICar[]>([]);
 
-  // функция для анимации машин
+  // анимация машин
   const animateCars = (oldCars: ICar[], newCars: ICar[]) => {
     let frame = 0;
 
@@ -33,16 +35,13 @@ const TrackMap = () => {
       });
 
       setCars(interpolated);
-
-      if (frame < ANIMATION_FRAMES) {
-        requestAnimationFrame(animation);
-      }
+      if (frame < ANIMATION_FRAMES) requestAnimationFrame(animation);
     };
 
     requestAnimationFrame(animation);
   };
 
-  // функция получения данных с API
+  // функция получения позиций машин
   const fetchLocations = async () => {
     try {
       const now = new Date();
@@ -78,7 +77,7 @@ const TrackMap = () => {
       animateCars(carsRef.current, newCars);
       carsRef.current = newCars;
     } catch {
-      // fallback mock, если API недоступно
+      // fallback, если API недоступно
       const mockCars: ICar[] = [
         { driver_number: 44, x: 500, y: 200 },
         { driver_number: 16, x: 520, y: 210 },
@@ -91,11 +90,8 @@ const TrackMap = () => {
   };
 
   useEffect(() => {
-    // первый запрос
-    fetchLocations();
-
-    // обновление каждые 5 секунд
-    const interval = setInterval(fetchLocations, API_UPDATE_INTERVAL);
+    fetchLocations(); // первый запрос
+    const interval = setInterval(fetchLocations, API_UPDATE_INTERVAL); // обновление каждую секунду
     return () => clearInterval(interval);
   }, []);
 
