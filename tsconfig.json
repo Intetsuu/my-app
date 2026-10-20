@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "src/@types", "src/.env.js"]
+  "include": ["src", "src/@types", "src/.env.js", "src/api"]
 }

@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    container_name: my-react-app
+
+  server:
+    build:
+      context: ./src/api
+      dockerfile: DockerFile
+    container_name: my-api
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: app
+      DB_PASSWORD: local_dev_password
+      DB_NAME: f1db
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    container_name: my-postgres
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: local_dev_password
+      POSTGRES_DB: f1db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d f1db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

@@ -15,7 +15,7 @@ const Header = () => {
           <nav className={styles.nav}>
             <img className={styles.logo} src={FIA} alt="FIA Logo"></img>
 
-            <a href="#">F1</a>
+            <a href="#">F1123123</a>
             <a href="#">F2</a>
             <a href="#">F3</a>
           </nav>
