@@ -1,4 +1,4 @@
-﻿package main
+package main
 
 import (
 	"context"
@@ -27,12 +27,12 @@ type DBDriver struct {
 
 // DriverResponse вЂ” С„РѕСЂРјР°С‚ РїРёР»РѕС‚Р°, РєРѕС‚РѕСЂС‹Р№ РѕС‚РїСЂР°РІР»СЏРµРј РЅР° С„СЂРѕРЅС‚РµРЅРґ.
 type DriverResponse struct {
-	ID          int    `json:"id"`
-	DriverNumber int   `json:"driver_number"`
-	FullName    string `json:"full_name"`
-	TeamName    string `json:"team_name"`
-	TeamColour  string `json:"team_colour"`
-	CountryCode string `json:"country_code"`
+	ID           int    `json:"id"`
+	DriverNumber int    `json:"driver_number"`
+	FullName     string `json:"full_name"`
+	TeamName     string `json:"team_name"`
+	TeamColour   string `json:"team_colour"`
+	CountryCode  string `json:"country_code"`
 }
 
 // DriverInput вЂ” РґР°РЅРЅС‹Рµ, РєРѕС‚РѕСЂС‹Рµ С„СЂРѕРЅС‚РµРЅРґ РѕС‚РїСЂР°РІР»СЏРµС‚ РїСЂРё СЃРѕР·РґР°РЅРёРё РёР»Рё РёР·РјРµРЅРµРЅРёРё РїРёР»РѕС‚Р°.
@@ -186,29 +186,27 @@ func main() {
 		})
 	})
 
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			w.Header().Set("Allow", "GET")
+			writeError(w, http.StatusMethodNotAllowed, "РњРµС‚РѕРґ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ")
+			return
+		}
 
-http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodGet {
-        w.Header().Set("Allow", "GET")
-        writeError(w, http.StatusMethodNotAllowed, "РњРµС‚РѕРґ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ")
-        return
-    }
+		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
+		defer cancel()
 
-    ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
-    defer cancel()
+		if err := db.PingContext(ctx); err != nil {
+			log.Printf("Healthcheck: PostgreSQL РЅРµРґРѕСЃС‚СѓРїРµРЅ: %v", err)
+			writeError(w, http.StatusServiceUnavailable, "Database unavailable")
+			return
+		}
 
-    if err := db.PingContext(ctx); err != nil {
-        log.Printf("Healthcheck: PostgreSQL РЅРµРґРѕСЃС‚СѓРїРµРЅ: %v", err)
-        writeError(w, http.StatusServiceUnavailable, "Database unavailable")
-        return
-    }
-
-    writeJSON(w, http.StatusOK, map[string]string{
-        "status":   "ok",
-        "database": "ok",
-    })
-})
-
+		writeJSON(w, http.StatusOK, map[string]string{
+			"status":   "ok",
+			"database": "ok",
+		})
+	})
 
 	// GET /drivers вЂ” РїРѕР»СѓС‡РёС‚СЊ РІСЃРµС… РїРёР»РѕС‚РѕРІ.
 	// POST /drivers вЂ” СЃРѕР·РґР°С‚СЊ РїРёР»РѕС‚Р°.
