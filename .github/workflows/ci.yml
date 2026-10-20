@@ -57,10 +57,11 @@ jobs:
 
       - name: Check Go formatting
         run: |
-          test -z "$(gofmt -l main.go)" || {
-            gofmt -l main.go
+          if [ -n "$(gofmt -l main.go)" ]; then
+            echo "Go formatting check failed:"
+            gofmt -d main.go
             exit 1
-          }
+          fi
 
       - name: Run Go tests
         run: go test ./...
