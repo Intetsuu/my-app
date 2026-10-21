@@ -4,12 +4,14 @@ services:
     ports:
       - "8080:80"
     container_name: my-react-app
+    restart: unless-stopped
 
   server:
     build:
       context: ./src/api
       dockerfile: DockerFile
     container_name: my-api
+    restart: unless-stopped
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -23,6 +25,7 @@ services:
   db:
     image: postgres:17-alpine
     container_name: my-postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}

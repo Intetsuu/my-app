@@ -12,6 +12,8 @@ RUN CGO_ENABLED=0 go build -o api main.go
 
 FROM alpine:3.22
 
+ENV LANG=C.UTF-8
+
 WORKDIR /app
 
 COPY --from=build /app/api .
